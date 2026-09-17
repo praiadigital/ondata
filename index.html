@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ondata — Ondas, Clima e Demanda de Temporada</title>
-<meta name="description" content="Correlação inédita entre condições de mar, clima e demanda de locação de temporada no litoral paulista.">
-<style>body{font-family:system-ui;margin:0;background:#f0f9ff;color:#0c4a6e}header{background:linear-gradient(135deg,#0369a1,#0ea5e9);color:#fff;padding:2rem 1rem;text-align:center}header a{color:#bae6fd}main{max-width:760px;margin:1.5rem auto;padding:0 1rem}.card{background:#fff;border-radius:12px;padding:1.2rem;margin:1rem 0;box-shadow:0 2px 8px rgba(2,132,199,.15)}select{font-size:1rem;padding:.5rem;border-radius:8px;border:1px solid #7dd3fc}canvas{width:100%;background:#fff;border-radius:12px}table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{padding:.4rem;border-bottom:1px solid #e0f2fe;text-align:left}footer{text-align:center;font-size:.85rem;padding:2rem 1rem;color:#0369a1}.net{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.8rem}.net a{background:#e0f2fe;color:#075985;padding:.3rem .6rem;border-radius:999px;text-decoration:none;font-size:.8rem}</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ondata — Ondas, clima e demanda de temporada | Praia Digital</title>
+<meta name="description" content="Ondata correlaciona swell, vento e clima com a demanda de locação de temporada: saiba quando os surfistas lotam o litoral.">
+<link rel="canonical" href="https://praia.digital/ondata/">
+<style>:root{--azul:#0a2540;--mar:#0e7490;--areia:#f8f5ef}*{margin:0;box-sizing:border-box;font-family:system-ui,sans-serif}body{background:var(--areia);color:#1e293b}header{background:linear-gradient(135deg,var(--azul),var(--mar));color:#fff;padding:2.5rem 1.5rem;text-align:center}.badge{display:inline-block;background:rgba(255,255,255,.15);padding:.25rem .8rem;border-radius:999px;font-size:.8rem;margin-bottom:.8rem}main{max-width:760px;margin:2rem auto;padding:0 1.25rem}.card{background:#fff;border-radius:1rem;padding:1.75rem;box-shadow:0 4px 24px rgba(10,37,64,.08);margin-bottom:1.5rem}label{display:block;font-weight:600;margin:1rem 0 .35rem}select{width:100%;padding:.7rem;border:1px solid #cbd5e1;border-radius:.5rem;font-size:1rem}button{width:100%;margin-top:1.4rem;background:var(--mar);color:#fff;border:0;padding:.9rem;font-size:1.05rem;font-weight:700;border-radius:.6rem;cursor:pointer}.semana{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:1rem}.dia{background:var(--areia);border-radius:.6rem;padding:.6rem .3rem;text-align:center;font-size:.75rem}.dia b{display:block;font-size:1.05rem}.ondas{font-size:1.1rem}.tag{display:inline-block;padding:.3rem .8rem;border-radius:999px;font-weight:700;font-size:.85rem}.alta{background:#dcfce7;color:#166534}.media{background:#fef9c3;color:#854d0e}.baixa{background:#fee2e2;color:#991b1b}.rede{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem}.rede a{background:#fff;border:1px solid #e2e8f0;border-radius:.6rem;padding:.8rem;text-decoration:none;color:var(--azul);font-weight:600;font-size:.9rem}footer{text-align:center;padding:2rem;color:#64748b;font-size:.85rem}footer a{color:var(--mar)}</style>
 </head>
 <body>
-<header><h1>🌊 Ondata</h1><p>Ondas + clima + demanda de temporada: o primeiro índice preditivo do litoral.</p><a href="https://praia.digital">← praia.digital</a> · <a href="https://praia.digital/apps">Hub de apps</a></header>
+<header><span class="badge">🛰️ App satélite de <a href="https://praia.digital" style="color:#fff">praia.digital</a></span><h1>🏄 Ondata</h1><p>Swell + clima + demanda: quando os surfistas (e turistas) lotam o litoral</p></header>
 <main>
-<div class="card"><label><b>Praia:</b></label> <select id="praia" onchange="render()"><option>Guarujá — Enseada</option><option>Santos — Gonzaga</option><option>Maresias</option><option>Ubatuba — Itamambuca</option><option>Praia Grande — Guilhermina</option><option>Bertioga — Riviera</option></select><p id="insight"></p></div>
-<div class="card"><h3>Índice de demanda previsto (próximos 12 meses)</h3><canvas id="cv" width="700" height="260"></canvas></div>
-<div class="card"><h3>Leitura do mês</h3><table id="tb"></table></div>
-<div class="card"><h3>Ferramentas relacionadas</h3><p>📈 <a href="https://praia.digital/temporada-pro">Temporada Pro — precifique pela demanda</a><br>🌙 <a href="https://praia.digital/marea">Maréa — tábua de marés e sazonalidade</a><br>💰 <a href="https://praia.digital/radar-precos">Radar de Preços</a></p></div>
+<div class="card">
+<label>Pico de surf</label><select id="pico"><option value="1.4">Maresias (point break)</option><option value="1.3">Tombo (Guarujá)</option><option value="1.2">Itamambuca (Ubatuba)</option><option value="1.1">Camburi</option><option value="1">Praia Grande (Ubatuba)</option></select>
+<label>Mês</label><select id="mes"><option value="0.7">Janeiro</option><option value="0.7">Fevereiro</option><option value="0.9">Março</option><option value="1.1">Abril</option><option value="1.3">Maio</option><option value="1.4">Junho</option><option value="1.3">Julho</option><option value="1.2">Agosto</option><option value="1">Setembro</option><option value="0.9">Outubro</option><option value="0.8">Novembro</option><option value="0.7">Dezembro</option></select>
+<button onclick="prever()">Gerar previsão de 7 dias</button>
+</div>
+<div class="card" id="out" style="display:none"><h3 id="tit"></h3><div class="semana" id="semana"></div><p id="dica" style="margin-top:1rem"></p>
+<p style="margin-top:1rem;font-size:.9rem">Combine com as marés do <a href="https://praia.digital/marea">Maréa</a> e ajuste preços no <a href="https://praia.digital/temporada-pro">Temporada Pro</a>.</p></div>
+<h2 style="margin:1.5rem 0 .8rem">🌐 Rede Praia Digital</h2>
+<div class="rede">
+<a href="https://praia.digital">🏠 Portal Praia Digital</a>
+<a href="https://praia.digital/marea">🌊 Maréa</a>
+<a href="https://praia.digital/calendario-demanda">📅 Calendário de Demanda</a>
+<a href="https://praia.digital/eventos-litoral">🎉 Eventos do Litoral</a>
+<a href="https://praia.digital/apps">🛰️ Todos os apps</a>
+</div>
 </main>
-<footer><b>Rede Praia Digital</b><div class="net"><a href="https://praia.digital/apps">Hub</a><a href="https://praia.digital/praiascore">PraiaScore</a><a href="https://praia.digital/vizinho-digital">Vizinho Digital</a><a href="https://praia.digital/match-praia">Match Praia</a><a href="https://praia.digital/mapa-investidor">Mapa Investidor</a><a href="https://praia.digital/plano-litoral">Plano Litoral</a><a href="https://praia.digital/concierge-ia">Concierge IA</a><a href="https://praia.digital/tour-360">Tour 360</a></div><p>© 2026 Praia Digital</p></footer>
+<footer>Feito com 🌊 pela rede <a href="https://praia.digital">Praia Digital</a> · <a href="https://github.com/praiadigital/ondata">código aberto no GitHub</a></footer>
 <script>
-const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-const base={'Guarujá — Enseada':[96,92,62,55,38,34,58,40,42,52,66,88],'Santos — Gonzaga':[94,90,60,52,36,32,55,38,40,50,63,85],'Maresias':[98,88,66,58,44,40,62,48,46,56,70,92],'Ubatuba — Itamambuca':[97,86,64,56,42,38,60,46,44,54,68,90],'Praia Grande — Guilhermina':[95,91,61,53,37,33,56,39,41,51,64,86],'Bertioga — Riviera':[93,89,63,54,39,35,57,41,43,53,65,87]};
-function seed(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%997;return h/997;}
-function render(){
- const p=document.getElementById('praia').value,d=base[p],mx=Math.max(...d);
- const c=document.getElementById('cv').getContext('2d');c.clearRect(0,0,700,260);
- const w=700/12;
- d.forEach((v,i)=>{const h=v/mx*200;c.fillStyle=v>80?'#0284c7':v>50?'#38bdf8':'#bae6fd';c.fillRect(i*w+8,240-h,w-16,h);c.fillStyle='#0c4a6e';c.font='12px system-ui';c.fillText(meses[i],i*w+12,256);c.fillText(v,i*w+16,234-h);});
- const mi=d.indexOf(mx);
- document.getElementById('insight').innerHTML='🏄 Pico de demanda em <b>'+meses[mi]+'</b>. Swells de sul no inverno elevam o turismo de surf; feriados prolongados criam picos secundários. Fator maré (seed local): '+(seed(p)*100|0)+'%.';
- document.getElementById('tb').innerHTML='<tr><th>Mês</th><th>Demanda</th><th>Estratégia</th></tr>'+d.map((v,i)=>'<tr><td>'+meses[i]+'</td><td>'+v+'</td><td>'+(v>80?'Tarifa premium +40%':v>50?'Tarifa média':'Promoções / estadias longas')+'</td></tr>').join('');
+const dias=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+function prever(){
+const f=(+pico.value)*(+mes.value);out.style.display='block';
+tit.innerHTML=`Previsão simulada — ${pico.options[pico.selectedIndex].text}`;
+let h='',dem=0;
+for(let i=0;i<7;i++){const alt=(f*(0.8+Math.abs(Math.sin(i*2.3))*1.4)).toFixed(1);const d=Math.min(100,Math.round(alt*55+(i>4?25:0)));dem+=d;
+const cls=d>70?'alta':d>40?'media':'baixa';
+h+=`<div class="dia"><span class="ondas">${alt>=2?'🌊🌊🌊':alt>=1.2?'🌊🌊':'🌊'}</span><b>${alt}m</b>${dias[i]}<br><span class="tag ${cls}" style="font-size:.65rem;padding:.1rem .4rem">${d}%</span></div>`}
+semana.innerHTML=h;const media=Math.round(dem/7);
+dica.innerHTML=media>65?'📈 <b>Demanda alta!</b> Suba as diárias de fim de semana em 20–40%.':media>40?'⚖️ Demanda moderada. Mantenha preços-base e foque em ocupação.':'📉 Semana fraca. Considere descontos para estadias longas.';
 }
-render();
 </script>
-</body>
-</html>
+</body></html>
